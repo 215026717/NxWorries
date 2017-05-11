@@ -1,0 +1,22 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>play.ico</file>
+        <file>pmaze.png</file>
+        <file>darkred.png</file>
+        <file>green.png</file>
+        <file>magenta.png</file>
+        <file>orange.png</file>
+        <file>pacCD.png</file>
+        <file>pacCL.png</file>
+        <file>pacCR.png</file>
+        <file>pacCU.png</file>
+        <file>pacOD.png</file>
+        <file>pacOL.png</file>
+        <file>pacOR.png</file>
+        <file>pacOU.png</file>
+        <file>joker.png</file>
+        <file>jokerC.png</file>
+        <file>jokerI.png</file>
+        <file>jokerCI.png</file>
+    </qresource>
+</RCC>
