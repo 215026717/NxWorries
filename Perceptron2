@@ -1,0 +1,136 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+
+
+class PerceptronClassifier{
+   static double theta = 0;
+   static double learningRate;
+   static String filename;
+   static double w1,w2,w3,w4;
+   static double x1,x2,x3,x4;
+   static double dw1,dw2,dw3,dw4;
+   static int count=0;
+   static double bias=0;
+   static double d_bias=0;
+   static double biasOld;
+   static double w1Old,w2Old,w3Old,w4Old;
+   static int epoch;
+   static double y_in;
+   
+   ArrayList weights = new ArrayList();
+   ArrayList deltaWB = new ArrayList(); 
+   ArrayList tempXofI= new ArrayList();
+   
+   public static void readFromFile(){
+   
+      filename = "datasetA.txt";
+      epoch=2;
+      learningRate = 0.5;
+      
+      for(int w=0;w<epoch;w++){
+      
+      try{
+         BufferedReader br = new BufferedReader(new FileReader(filename));
+         String sCurrentLine;
+         
+          while((sCurrentLine = br.readLine()) != null){
+            //System.out.println(sCurrentLine);
+            String[] currentLArray = sCurrentLine.split(",");
+            x1 = Double.parseDouble(currentLArray[0]);
+            x2 = Double.parseDouble(currentLArray[1]);
+            x3 = Double.parseDouble(currentLArray[2]);
+            x4 = Double.parseDouble(currentLArray[3]);
+            
+            int target;
+            
+            if(currentLArray[4].equals("Iris-setosa"))
+               target = 1;
+            else
+               target = -1;
+            
+            //System.out.println("Target "+target);
+            
+            y_in = bias + (x1*w1+x2*w2+x3*w3+x4*w4); 
+            
+            //System.out.println("y_in "+y_in);
+            
+            int y;
+            
+            if(y_in>theta)
+               y = 1;
+            else if(y_in<(-1*theta))
+               y=-1;
+            else
+               y=0; 
+            
+            //if y equals target
+            //
+            
+            //System.out.println("y "+y);
+            
+            if(y!=target){
+            
+               w1Old = w1;
+               w1 = w1 + learningRate*target*x1;
+               
+               w2Old = w2;
+               w2 = w2 + learningRate*target*x2;
+               
+               w3Old = w3;
+               w3 = w3 + learningRate*target*x3;
+               
+               w4Old = w4;
+               w4 = w4 + learningRate*target*x4;  
+               
+               biasOld = bias;
+               bias = bias + learningRate;
+            
+               dw1 = w1 - w1Old;
+               dw2 = w2 - w2Old;
+               dw3 = w3 - w3Old;
+               dw4 = w4 - w4Old;
+               
+               d_bias = bias - biasOld;
+               
+               //System.out.println("reach "+target);
+               //System.out.println("bias "+bias);
+               //System.out.println("w1 "+w1);  
+                  
+            }
+            
+            System.out.print("1: "+dw1+"\t");
+            System.out.print("2: "+dw2+"\t");
+            System.out.print("3: "+dw3+"\t");
+            System.out.println("4: "+dw4+"\t");
+              
+            for(int i=0;i<5;i++){
+               //System.out.println(currentLArray[i]);
+            } 
+            ++count;
+         }
+       
+       }
+      catch(IOException e){
+         e.printStackTrace();
+      }
+      
+      }
+      
+   }
+      
+   
+   public static void main(String [] args){
+      System.out.println("Enter filename: ");
+      System.out.println("Enter learning rate to use(leave black to use default): ");
+      System.out.println("Enter number of iterations(epoch): ");
+      System.out.println("Would you like to return the weight and bias?(Y/N)");
+      
+      readFromFile();
+      
+      System.out.println(count);
+
+   }
+}
