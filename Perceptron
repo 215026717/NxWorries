@@ -1,0 +1,87 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.BufferedReader;
+
+
+class PerceptronClassifier2{
+   static double theta = 0;
+   static double learningRate;
+   static String filename;
+   static double w1 = 0,w2 = 0,w3 = 0,w4 = 0;
+   static double x1,x2,x3,x4;
+   static double dw1,dw2,dw3,dw4;
+   static int count=0;
+   static double bias=0;
+   static double d_bias=0;
+   static double biasOld;
+   static double w1Old,w2Old,w3Old,w4Old;
+   static int epoch;
+   static double y_in;
+   
+   List<Integer> weights = new ArrayList<Integer>();
+   ArrayList deltaWB = new ArrayList(); 
+   ArrayList tempXofI= new ArrayList();
+   weights.add(w1);
+   weights.add(w2);
+   weights.add(w3);
+   weights.add(w4);
+   
+   public static void readFromFile(){
+   
+      filename = "datasetA.txt";
+      //epoch=2;
+      learningRate = 0.5;
+      
+      int clas_it = 0;
+      String clas_name = "";
+      int target;
+      
+      for(int w=0;w<epoch;w++){
+      
+      try{
+         BufferedReader br = new BufferedReader(new FileReader(filename));
+         String sCurrentLine;
+         
+          while((sCurrentLine = br.readLine()) != null){
+            //System.out.println(sCurrentLine);
+            String[] currentLArray = sCurrentLine.split(",");
+            x1 = Double.parseDouble(currentLArray[0]);
+            x2 = Double.parseDouble(currentLArray[1]);
+            x3 = Double.parseDouble(currentLArray[2]);
+            x4 = Double.parseDouble(currentLArray[3]);
+            
+            if (clas_it == 0){
+               clas_name = currentLArray[4];
+               clas_it++;
+            }
+            if(currentLArray[4].equals(clas_name))
+               target = 1;
+            else
+               target = -1;
+               
+            
+         }
+       }
+      catch(IOException e){
+         e.printStackTrace();
+      }
+      
+      
+      
+      }   
+   }
+      
+   public static void main(String [] args){
+      System.out.println("Enter filename: ");
+      System.out.println("Enter learning rate to use(leave black to use default): ");
+      System.out.println("Enter number of iterations(epoch): ");
+      System.out.println("Would you like to return the weight and bias?(Y/N)");
+      
+      readFromFile();
+      
+      System.out.println(count);
+
+   }
+}
