@@ -1,87 +1,88 @@
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.io.IOException;
-import java.io.FileReader;
-import java.io.BufferedReader;
+import java.util.*;
+import java.io.*;
 
-
-class PerceptronClassifier2{
-   static double theta = 0;
-   static double learningRate;
-   static String filename;
-   static double w1 = 0,w2 = 0,w3 = 0,w4 = 0;
-   static double x1,x2,x3,x4;
-   static double dw1,dw2,dw3,dw4;
-   static int count=0;
-   static double bias=0;
-   static double d_bias=0;
-   static double biasOld;
-   static double w1Old,w2Old,w3Old,w4Old;
-   static int epoch;
-   static double y_in;
-   
-   List<Integer> weights = new ArrayList<Integer>();
-   ArrayList deltaWB = new ArrayList(); 
-   ArrayList tempXofI= new ArrayList();
-   weights.add(w1);
-   weights.add(w2);
-   weights.add(w3);
-   weights.add(w4);
-   
-   public static void readFromFile(){
-   
-      filename = "datasetA.txt";
-      //epoch=2;
-      learningRate = 0.5;
-      
-      int clas_it = 0;
-      String clas_name = "";
-      int target;
-      
-      for(int w=0;w<epoch;w++){
-      
-      try{
-         BufferedReader br = new BufferedReader(new FileReader(filename));
-         String sCurrentLine;
-         
-          while((sCurrentLine = br.readLine()) != null){
-            //System.out.println(sCurrentLine);
-            String[] currentLArray = sCurrentLine.split(",");
-            x1 = Double.parseDouble(currentLArray[0]);
-            x2 = Double.parseDouble(currentLArray[1]);
-            x3 = Double.parseDouble(currentLArray[2]);
-            x4 = Double.parseDouble(currentLArray[3]);
-            
-            if (clas_it == 0){
-               clas_name = currentLArray[4];
-               clas_it++;
-            }
-            if(currentLArray[4].equals(clas_name))
-               target = 1;
-            else
-               target = -1;
-               
-            
-         }
-       }
-      catch(IOException e){
-         e.printStackTrace();
-      }
-      
-      
-      
-      }   
-   }
-      
-   public static void main(String [] args){
-      System.out.println("Enter filename: ");
-      System.out.println("Enter learning rate to use(leave black to use default): ");
-      System.out.println("Enter number of iterations(epoch): ");
-      System.out.println("Would you like to return the weight and bias?(Y/N)");
-      
-      readFromFile();
-      
-      System.out.println(count);
-
-   }
-}
+public class PerceptronClassifier{
+	static double theta = 0;
+	static double learningRate = 0.5;
+	static String filename;
+	static double w1 = 0,w2 = 0,w3 = 0,w4 = 0;
+	static double x1,x2,x3,x4;
+	static double bias=0;
+	static double d_bias=0;
+	static int epoch;
+	static double y_in;
+	static int y;
+	static int numW;
+	static List<Double> weights = new ArrayList<>();
+	static ArrayList<List<Double>> Weights = new ArrayList<>(); 
+	@SuppressWarnings("resource")
+	public static void readFromFile() throws FileNotFoundException{
+		weights.add(w1);
+		weights.add(w2);
+		weights.add(w3);
+		weights.add(w4);
+		Weights.add(weights);
+		int clas_it = 0;
+		String clas_name = "";
+		int target;
+		Scanner input = new Scanner(new File(filename));
+		for(int i = 0; i < epoch;i++){
+			while(input.hasNextLine()){
+				String[] currentLArray = input.nextLine().split(",");
+				x1 = Double.parseDouble(currentLArray[0]);
+				x2 = Double.parseDouble(currentLArray[1]);
+				x3 = Double.parseDouble(currentLArray[2]);
+				x4 = Double.parseDouble(currentLArray[3]);
+				if (clas_it == 0){
+					clas_name = currentLArray[4];
+					clas_it++;
+				}
+				if(currentLArray[4].equals(clas_name))
+					target = 1;
+				else
+					target = -1;
+				
+				y_in = bias + x1 * w1 + x2 * w2 + x3 * w3 + x4 * w4;
+					
+				if (y_in >= theta)
+					y = 1;
+				else
+					y = -1;
+				if (y != target){
+					w1 = weights.get(0) + learningRate*target*x1;
+					w2 = weights.get(1) + learningRate*target*x2;
+					w3 = weights.get(2) + learningRate*target*x3;
+					w4 = weights.get(3) + learningRate*target*x4;
+					bias += learningRate*target;
+					weights.set(0,w1);
+					weights.set(1,w2);
+					weights.set(2,w3);
+					weights.set(3,w4);
+					Weights.add(weights);
+				}
+			}	
+			if (numW == Weights.size()){
+				System.out.println("Stopping Condition was met!!!");
+				break;
+			}
+			else	
+				numW = Weights.size();
+		}
+	}
+	      	
+	@SuppressWarnings("resource")
+	public static void main(String[] args) throws FileNotFoundException{
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Enter filename: ");
+	    filename = sc.next();  
+		System.out.print("Enter learning rate to use(leave black to use default): ");
+		learningRate = sc.nextDouble();
+		System.out.print("Enter number of iterations(epoch): ");
+		epoch = sc.nextInt();
+		System.out.print("Would you like to return the weight and bias?(Y/N)");
+		if (sc.next().equals("Y")){
+			readFromFile();
+			System.out.println("\n0:"+bias+" 1:"+w1+" 2:"+w2+" 3:"+w3+" 4:"+w4);
+		}
+	   }
+	}
